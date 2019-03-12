@@ -4,14 +4,19 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.software_architect.Adapter.MessageAdapter;
+import com.example.software_architect.Model.Chat;
 import com.example.software_architect.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,6 +43,11 @@ public class MessageActivity extends AppCompatActivity {
     ImageButton btn_send;
     EditText text_send;
 
+    MessageAdapter mMessageAdapter;
+    List<Chat> mChats;
+
+    RecyclerView mRecyclerView;
+
     Intent mIntent;
 
     @Override
@@ -44,19 +56,22 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         Toolbar mToolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
-
         getSupportActionBar().setTitle("");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        mRecyclerView = findViewById(R.id.recycle_view);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLinearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
         btn_send = findViewById(R.id.btn_send);
@@ -94,6 +109,7 @@ public class MessageActivity extends AppCompatActivity {
                 }else{
                     Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
                 }
+                readMesages(fuser.getUid(),userid,user.getImageURL());
             }
 
             @Override
@@ -111,5 +127,31 @@ public class MessageActivity extends AppCompatActivity {
         mHashMap.put("message",message);
 
         mReference.child("Chats").push().setValue(mHashMap);
+    }
+
+    private void readMesages(final String myid, final String userid, final String imageURL) {
+        mChats = new ArrayList<>();
+
+        mReference = FirebaseDatabase.getInstance().getReference("Chats");
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot mDataSnapshot) {
+                mChats.clear();
+                for (DataSnapshot mSnapshot : mDataSnapshot.getChildren()) {
+                    Chat mChat = mSnapshot.getValue(Chat.class);
+                    if (mChat.getReceiver().equals(myid) && mChat.getSender().equals(userid) ||
+                        mChat.getReceiver().equals(userid) && mChat.getSender().equals(myid)){
+                        mChats.add(mChat);
+                    }
+                    mMessageAdapter = new MessageAdapter(MessageActivity.this, mChats, imageURL);
+                    mRecyclerView.setAdapter(mMessageAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError mDatabaseError) {
+
+            }
+        });
     }
 }
