@@ -1,12 +1,19 @@
 package com.example.software_architect.Model;
 
 public class User {
-    private String id,username, imageURL;
+    private String id,username, imageURL,status;
 
     public User(String mId, String mUsername, String mImageURL) {
         id = mId;
         username = mUsername;
         imageURL = mImageURL;
+    }
+
+    public User(String mId, String mUsername, String mImageURL, String mStatus) {
+        id = mId;
+        username = mUsername;
+        imageURL = mImageURL;
+        status = mStatus;
     }
 
     public User() {
@@ -34,5 +41,13 @@ public class User {
 
     public void setImageURL(String mImageURL) {
         imageURL = mImageURL;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String mStatus) {
+        status = mStatus;
     }
 }

@@ -62,7 +62,7 @@ public class MessageActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+               startActivity(new Intent(MessageActivity.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -153,5 +153,26 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void status(String status) {
+        mReference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        HashMap<String, Object> mHashMap = new HashMap<>();
+
+        mHashMap.put("status", status);
+
+
+        mReference.updateChildren(mHashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 }
