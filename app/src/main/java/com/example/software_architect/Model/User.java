@@ -1,7 +1,7 @@
 package com.example.software_architect.Model;
 
 public class User {
-    private String id,username, imageURL,status;
+    private String id,username, imageURL,status,search;
 
     public User(String mId, String mUsername, String mImageURL) {
         id = mId;
@@ -14,6 +14,14 @@ public class User {
         username = mUsername;
         imageURL = mImageURL;
         status = mStatus;
+    }
+
+    public User(String mId, String mUsername, String mImageURL, String mStatus, String mSearch) {
+        id = mId;
+        username = mUsername;
+        imageURL = mImageURL;
+        status = mStatus;
+        search = mSearch;
     }
 
     public User() {
@@ -49,5 +57,13 @@ public class User {
 
     public void setStatus(String mStatus) {
         status = mStatus;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String mSearch) {
+        search = mSearch;
     }
 }
