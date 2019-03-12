@@ -28,13 +28,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup mViewGroup, int mI) {
+    public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup mViewGroup, int mI) {
         View mView = LayoutInflater.from(mContext).inflate(R.layout.user_item, mViewGroup, false);
         return new UserAdapter.ViewHolder(mView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder mViewHolder, int mI) {
+    public void onBindViewHolder(@NonNull UserAdapter.ViewHolder mViewHolder, int mI) {
         final User user = mUsers.get(mI);
         mViewHolder.username.setText(user.getUsername());
         if (user.getImageURL().equals("default")) {
