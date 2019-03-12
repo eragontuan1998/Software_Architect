@@ -2,11 +2,13 @@ package com.example.software_architect.Model;
 
 public class Chat {
     private String sender,receiver,message;
+    private boolean isseen;
 
-    public Chat(String mSender, String mReceiver, String mMessage) {
-        sender = mSender;
-        receiver = mReceiver;
-        message = mMessage;
+    public Chat(String mSender, String mReceiver, String mMessage,boolean isseen) {
+        this.sender = mSender;
+        this.receiver = mReceiver;
+        this.message = mMessage;
+        this.isseen= isseen;
     }
 
     public Chat() {
@@ -34,5 +36,13 @@ public class Chat {
 
     public void setMessage(String mMessage) {
         message = mMessage;
+    }
+
+    public boolean isIsseen() {
+        return isseen;
+    }
+
+    public void setIsseen(boolean mIsseen) {
+        isseen = mIsseen;
     }
 }
